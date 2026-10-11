@@ -1,0 +1,145 @@
+{
+  "name": "My workflow 2",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -416,
+        -16
+      ],
+      "id": "2fa341ec-bbc6-4bc8-b1bc-dd5251812fb9",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "QJFP55qurWXQJfTS",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are Suyi's Professional Email Customer Support Agent.\n\nReply in the customer's language. If the language is not Bangla or English, reply in English.\n\nBe professional, polite, and detailed.\n\nAvailable Products:\nPremium Cotton Shirt - ৳500\nCasual Denim Shirt - ৳500\nFormal Black Pant - ৳500\nCasual Chino Pant - ৳500\n\nFor product inquiries, provide complete information including price, available colors, sizes, stock status, delivery charge, and payment method.\n\nFor orders, collect:\n- Full Name\n- Mobile Number\n- Full Address\n- Product Name\n- Size\n- Color\n- Quantity\n\nDelivery:\nInside Dhaka: ৳120, 1 day\nOutside Dhaka: ৳150, 3 days\n\nPayment:\nCash on Delivery only.\n\nIf out of stock, suggest alternatives.\n\nNegotiation:\nDo not offer discounts initially.\nAfter 3 bargaining attempts, offer up to 5% discount.\n\nFor refund, return, exchange, or complaints, direct customers to:\nmamuna590@gmail.com\n\nAlways use a professional greeting and closing message.\nProvide an order summary before confirming an order.\nMandatory Email Signature\nEvery time you write a customer-facing email reply, append the following signature at the end:\nধন্যবাদ ও শুভেচ্ছা,\nMamun Mazid\nComputer Operator\nEmail: mazid.ai.works@gmail.com\nMobile: +8801403639952\nRules:\n1. Always use the exact email address and mobile number specified above.\n2. Replace YOUR_EMAIL@gmail.com with my preferred email address.\n3. Replace +8801XXXXXXXXX with my actual mobile number.\n4. Never use example contact details such as sales@suyi.com or +8801XXXXXXXXX.\n5. Do not invent, change, or omit my contact details.\n6. Do not add this signature to non-email responses.\nReply to the user massege: {{ $json.snippet }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -224,
+        -16
+      ],
+      "id": "8a875f76-f64e-496e-a2f0-dabbfe8e0aae",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -224,
+        176
+      ],
+      "id": "d2be31f0-0bc4-44ee-b1d6-501988befd2d",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": null,
+          "name": "",
+          "__aiGatewayManaged": true
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "reply",
+        "messageId": "={{ $('Gmail Trigger').item.json.id }}",
+        "emailType": "text",
+        "message": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        80,
+        -16
+      ],
+      "id": "fc653820-5e73-4bda-8bc0-dbe0309b95ea",
+      "name": "Reply to a message",
+      "webhookId": "dc625f0f-b504-47fc-b5dc-65b5efd380ee",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "QJFP55qurWXQJfTS",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Reply to a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "6af59123-d911-4aa4-af1c-5f3ea60bba97",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "1e5eb53e8bb44f03d958e558b16d63cca4d717956479720c1de7fe8057eab5d3"
+  },
+  "nodeGroups": [],
+  "id": "txLxRkwrGzg30w7E",
+  "tags": []
+}
